@@ -439,7 +439,7 @@ public class CloudFoundryClientTest {
 
 	@Test
 	public void createApplication() {
-		String appName = namespacedAppName("travel_test-0");
+		String appName = namespacedAppName("travel-test-0");
 		List<String> uris = Collections.singletonList(computeAppUrl(appName));
 		Staging staging =  new Staging();
 		connectedClient.createApplication(appName, staging, DEFAULT_MEMORY, uris, null);
@@ -500,7 +500,7 @@ public class CloudFoundryClientTest {
 
 	@Test
 	public void createApplicationWithHealthCheckTimeout() throws IOException {
-		String appName = namespacedAppName("health_check");
+		String appName = namespacedAppName("health-check");
 		createSpringApplication(appName, null, 2);
 
 		CloudApplication app = connectedClient.getApplication(appName);
@@ -512,7 +512,7 @@ public class CloudFoundryClientTest {
 
 	@Test
 	public void createApplicationWithDomainOnly() {
-		String appName = namespacedAppName("travel_test-tld");
+		String appName = namespacedAppName("travel-test-tld");
 
 		connectedClient.addDomain(TEST_DOMAIN);
 		List<String> uris = Collections.singletonList(TEST_DOMAIN);
@@ -530,7 +530,7 @@ public class CloudFoundryClientTest {
 
 	@Test
 	public void getApplicationByName() {
-		final String serviceName = "test_database";
+		final String serviceName = "test-database";
 		String appName = createSpringTravelApp("1", Collections.singletonList(serviceName));
 		CloudApplication app = connectedClient.getApplication(appName);
 		assertNotNull(app);
@@ -562,7 +562,7 @@ public class CloudFoundryClientTest {
 		thrown.expect(CloudFoundryException.class);
 		thrown.expect(hasProperty("statusCode", is(HttpStatus.NOT_FOUND)));
 		thrown.expectMessage(containsString("Not Found"));
-		String appName = namespacedAppName("non_existent");
+		String appName = namespacedAppName("non-existent");
 		connectedClient.getApplication(appName);
 	}
 
@@ -620,7 +620,7 @@ public class CloudFoundryClientTest {
 
 	@Test
 	public void getApplications() {
-		final String serviceName = "test_database";
+		final String serviceName = "test-database";
 		String appName = createSpringTravelApp("2", Collections.singletonList(serviceName));
 		List<CloudApplication> apps = connectedClient.getApplications();
 		assertEquals(1, apps.size());
@@ -902,7 +902,7 @@ public class CloudFoundryClientTest {
 		CloudApplication app = connectedClient.getApplication(appName);
 		assertNotNull(app);
 		assertEquals(appName, app.getName());
-		String newName = namespacedAppName("travel_test-6");
+		String newName = namespacedAppName("travel-test-6");
 		connectedClient.rename(appName, newName);
 		CloudApplication newApp = connectedClient.getApplication(newName);
 		assertNotNull(newApp);
@@ -1128,7 +1128,7 @@ public class CloudFoundryClientTest {
 
 	@Test
 	public void startExplodedApplication() throws IOException {
-		String appName = namespacedAppName("exploded_app");
+		String appName = namespacedAppName("exploded-app");
 		createAndUploadExplodedSpringTestApp(appName);
 		connectedClient.startApplication(appName);
 		CloudApplication app = connectedClient.getApplication(appName);
@@ -1167,7 +1167,7 @@ public class CloudFoundryClientTest {
 
 	@Test
 	public void getLogs() throws Exception {
-		String appName = namespacedAppName("simple_logs");
+		String appName = namespacedAppName("simple-logs");
 		createAndUploadAndStartSimpleSpringApp(appName);
 		boolean pass = getInstanceInfosWithTimeout(appName, 1, true);
 		assertTrue("Couldn't get the right application state", pass);
@@ -1184,7 +1184,7 @@ public class CloudFoundryClientTest {
 		// connectivity does not currently support proxies
 		new SocketDestHelper().setAllowedOnCurrentThread();
 
-		String appName = namespacedAppName("simple_logs");
+		String appName = namespacedAppName("simple-logs");
 		CloudApplication app = createAndUploadAndStartSimpleSpringApp(appName);
 		boolean pass = getInstanceInfosWithTimeout(appName, 1, true);
 		assertTrue("Couldn't get the right application state", pass);
@@ -1233,7 +1233,7 @@ public class CloudFoundryClientTest {
 	@Test
 	@Ignore("Ignore until the Java buildpack detects app crashes upon OOM correctly")
 	public void getCrashLogs() throws Exception {
-		String appName = namespacedAppName("simple_crashlogs");
+		String appName = namespacedAppName("simple-crashlogs");
 		createAndUploadSimpleSpringApp(appName);
 		connectedClient.updateApplicationEnv(appName, Collections.singletonMap("crash", "true"));
 		connectedClient.startApplication(appName);
@@ -1251,7 +1251,7 @@ public class CloudFoundryClientTest {
 
 	@Test
 	public void getFile() throws Exception {
-		String appName = namespacedAppName("simple_getFile");
+		String appName = namespacedAppName("simple-getFile");
 		createAndUploadAndStartSimpleSpringApp(appName);
 		boolean running = getInstanceInfosWithTimeout(appName, 1, true);
 		assertTrue("App failed to start", running);
@@ -1260,7 +1260,7 @@ public class CloudFoundryClientTest {
 
 	@Test
 	public void openFile() throws Exception {
-		String appName = namespacedAppName("simple_openFile");
+		String appName = namespacedAppName("simple-openFile");
 		createAndUploadAndStartSimpleSpringApp(appName);
 		boolean running = getInstanceInfosWithTimeout(appName, 1, true);
 		assertTrue("App failed to start", running);
@@ -1534,7 +1534,7 @@ public class CloudFoundryClientTest {
 
 	@Test
 	public void createApplicationWithService() throws IOException {
-		String serviceName = "test_database";
+		String serviceName = "test-database";
 		String appName = createSpringTravelApp("application-with-services", Collections.singletonList(serviceName));
 		uploadSpringTravelApp(appName);
 		CloudApplication app = connectedClient.getApplication(appName);
@@ -1560,7 +1560,7 @@ public class CloudFoundryClientTest {
 
 	@Test
 	public void updateApplicationService() throws IOException {
-		String serviceName = "test_database";
+		String serviceName = "test-database";
 		createMySqlService(serviceName);
 		String appName = createSpringTravelApp("7");
 
@@ -1579,7 +1579,7 @@ public class CloudFoundryClientTest {
 
 	@Test
 	public void bindAndUnbindService() throws IOException {
-		String serviceName = "test_database";
+		String serviceName = "test-database";
 		createMySqlService(serviceName);
 
 		String appName = createSpringTravelApp("bind1");
@@ -1723,17 +1723,17 @@ public class CloudFoundryClientTest {
 	@Test
 	public void addAndDeleteRoute() {
 		connectedClient.addDomain(TEST_DOMAIN);
-		connectedClient.addRoute("my_route1", TEST_DOMAIN);
-		connectedClient.addRoute("my_route2", TEST_DOMAIN);
+		connectedClient.addRoute("my-route1", TEST_DOMAIN);
+		connectedClient.addRoute("my-route2", TEST_DOMAIN);
 
 		List<CloudRoute> routes = connectedClient.getRoutes(TEST_DOMAIN);
-		assertNotNull(getRouteWithHost("my_route1", routes));
-		assertNotNull(getRouteWithHost("my_route2", routes));
+		assertNotNull(getRouteWithHost("my-route1", routes));
+		assertNotNull(getRouteWithHost("my-route2", routes));
 
-		connectedClient.deleteRoute("my_route2", TEST_DOMAIN);
+		connectedClient.deleteRoute("my-route2", TEST_DOMAIN);
 		routes = connectedClient.getRoutes(TEST_DOMAIN);
-		assertNotNull(getRouteWithHost("my_route1", routes));
-		assertNull(getRouteWithHost("my_route2", routes));
+		assertNotNull(getRouteWithHost("my-route1", routes));
+		assertNull(getRouteWithHost("my-route2", routes));
 
 		// test that removing domain that has routes throws exception
 		try {
@@ -1748,20 +1748,20 @@ public class CloudFoundryClientTest {
 	@Test
 	public void deleteOrphanedRoutes() {
 		connectedClient.addDomain(TEST_DOMAIN);
-		connectedClient.addRoute("unbound_route", TEST_DOMAIN);
+		connectedClient.addRoute("unbound-route", TEST_DOMAIN);
 
 		List<CloudRoute> routes = connectedClient.getRoutes(TEST_DOMAIN);
-		CloudRoute unboundRoute = getRouteWithHost("unbound_route", routes);
+		CloudRoute unboundRoute = getRouteWithHost("unbound-route", routes);
 		assertNotNull(unboundRoute);
 		assertEquals(0, unboundRoute.getAppsUsingRoute());
 
 		List<CloudRoute> deletedRoutes = connectedClient.deleteOrphanedRoutes();
-		assertNull(getRouteWithHost("unbound_route", connectedClient.getRoutes(TEST_DOMAIN)));
+		assertNull(getRouteWithHost("unbound-route", connectedClient.getRoutes(TEST_DOMAIN)));
 
 		assertTrue(deletedRoutes.size() > 0);
 		boolean found = false;
 		for (CloudRoute route : deletedRoutes) {
-			if (route.getHost().equals("unbound_route")) {
+			if (route.getHost().equals("unbound-route")) {
 				found = true;
 			}
 		}
@@ -1770,17 +1770,17 @@ public class CloudFoundryClientTest {
 	
 	@Test
 	public void appsWithRoutesAreCounted() throws IOException {
-		String appName = namespacedAppName("my_route3");
+		String appName = namespacedAppName("my-route3");
 		CloudApplication app = createAndUploadSimpleTestApp(appName);
 		List<String> uris = app.getUris();
-		uris.add("my_route3." + TEST_DOMAIN);
+		uris.add("my-route3." + TEST_DOMAIN);
 		connectedClient.addDomain(TEST_DOMAIN);
 		connectedClient.updateApplicationUris(appName, uris);
 
 		List<CloudRoute> routes = connectedClient.getRoutes(TEST_DOMAIN);
-		assertNotNull(getRouteWithHost("my_route3", routes));
-		assertEquals(1, getRouteWithHost("my_route3", routes).getAppsUsingRoute());
-		assertTrue(getRouteWithHost("my_route3", routes).inUse());
+		assertNotNull(getRouteWithHost("my-route3", routes));
+		assertEquals(1, getRouteWithHost("my-route3", routes).getAppsUsingRoute());
+		assertTrue(getRouteWithHost("my-route3", routes).inUse());
 
 		List<CloudRoute> defaultDomainRoutes = connectedClient.getRoutes(defaultDomainName);
 		assertNotNull(getRouteWithHost(appName, defaultDomainRoutes));
@@ -2444,7 +2444,7 @@ public class CloudFoundryClientTest {
 	}
 
 	private String createSpringTravelApp(String suffix, List<String> serviceNames) {
-		String appName = namespacedAppName("travel_test-" + suffix);
+		String appName = namespacedAppName("travel-test-" + suffix);
 		createSpringApplication(appName, serviceNames);
 		return appName;
 	}
