@@ -2586,7 +2586,7 @@ public class CloudFoundryClientTest {
 			}
 
 			final InstancesInfo applicationInstances = client.getApplicationInstances(appName);
-			if (applicationInstances != null) {
+			if (applicationInstances != null && !applicationInstances.getInstances().isEmpty()) {
 				return applicationInstances;
 			}
 
