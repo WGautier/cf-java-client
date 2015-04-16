@@ -1359,18 +1359,19 @@ public class CloudFoundryClientTest {
 		boolean pass = ensureApplicationRunning("haash-broker");
 		assertTrue("haash-broker failed to start", pass);
 
-		CloudServiceBroker newBroker = new CloudServiceBroker(CloudEntity.Meta.defaultMeta(), "haash-broker", "http://haash-broker.cf.deepsouthcloud.com", "warreng", "snoopdogg");
+		String route = "http://" + connectedClient.getApplication("haash-broker").getUris().get(0);
+		CloudServiceBroker newBroker = new CloudServiceBroker(CloudEntity.Meta.defaultMeta(), "haash-broker", route, "warreng", "snoopdogg");
 		connectedClient.createServiceBroker(newBroker);
 
 		CloudServiceBroker broker = connectedClient.getServiceBroker("haash-broker");
 		assertNotNull(broker);
 		assertNotNull(broker.getMeta());
 		assertEquals("haash-broker", broker.getName());
-		assertEquals("http://haash-broker.cf.deepsouthcloud.com", broker.getUrl());
+		assertEquals(route, broker.getUrl());
 		assertEquals("warreng", broker.getUsername());
 		assertNull(broker.getPassword());
 
-		newBroker = new CloudServiceBroker(CloudEntity.Meta.defaultMeta(), "haash-broker", "http://haash-broker.cf.deepsouthcloud.com", "warreng", "snoopdogg");
+		newBroker = new CloudServiceBroker(CloudEntity.Meta.defaultMeta(), "haash-broker", route, "warreng", "snoopdogg");
 		connectedClient.updateServiceBroker(newBroker);
 
 		connectedClient.updateServicePlanVisibilityForBroker("haash-broker", true);
