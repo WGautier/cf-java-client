@@ -1337,8 +1337,23 @@ public class CloudFoundryClientTest {
 	}
 
 	@Test
-	public void getServiceBrokers() {
+	public void getServiceBrokers() throws IOException {
 		assumeTrue(CCNG_USER_IS_ADMIN);
+
+		CloudServiceBroker broker = connectedClient.getServiceBroker("haash-broker");
+		if (broker != null) {
+			connectedClient.deleteServiceBroker("haash-broker");
+		}
+
+		createAndUploadAndStartSampleServiceBrokerApp("haash-broker");
+
+		boolean pass = ensureApplicationRunning("haash-broker");
+		assertTrue("haash-broker failed to start", pass);
+
+		String route = "http://" + connectedClient.getApplication("haash-broker").getUris().get(0);
+
+		CloudServiceBroker newBroker = new CloudServiceBroker(CloudEntity.Meta.defaultMeta(), "haash-broker", route, "warreng", "snoopdogg");
+		connectedClient.createServiceBroker(newBroker);
 
 		List<CloudServiceBroker> brokers = connectedClient.getServiceBrokers();
 		assertNotNull(brokers);
@@ -1354,6 +1369,11 @@ public class CloudFoundryClientTest {
 	public void serviceBrokerLifecycle() throws IOException {
 		assumeTrue(CCNG_USER_IS_ADMIN);
 
+		CloudServiceBroker broker = connectedClient.getServiceBroker("haash-broker");
+		if (broker != null) {
+			connectedClient.deleteServiceBroker("haash-broker");
+		}
+
 		createAndUploadAndStartSampleServiceBrokerApp("haash-broker");
 
 		boolean pass = ensureApplicationRunning("haash-broker");
@@ -1363,7 +1383,7 @@ public class CloudFoundryClientTest {
 		CloudServiceBroker newBroker = new CloudServiceBroker(CloudEntity.Meta.defaultMeta(), "haash-broker", route, "warreng", "snoopdogg");
 		connectedClient.createServiceBroker(newBroker);
 
-		CloudServiceBroker broker = connectedClient.getServiceBroker("haash-broker");
+		broker = connectedClient.getServiceBroker("haash-broker");
 		assertNotNull(broker);
 		assertNotNull(broker.getMeta());
 		assertEquals("haash-broker", broker.getName());
@@ -1768,7 +1788,7 @@ public class CloudFoundryClientTest {
 		}
 		assertTrue(found);
 	}
-	
+
 	@Test
 	public void appsWithRoutesAreCounted() throws IOException {
 		String appName = namespacedAppName("my-route3");
@@ -1909,7 +1929,7 @@ public class CloudFoundryClientTest {
 
 			if (startingInfo != null && startingInfo.getStagingFile() != null) {
 				int offset = 0;
-				firstLine = connectedClient
+                firstLine = connectedClient
 						.getStagingLogs(startingInfo, offset);
 			}
 
